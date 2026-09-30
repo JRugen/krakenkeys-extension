@@ -4,6 +4,10 @@ const DEFAULT_API_BASE = 'https://krakenkeys.com';
 
 export default defineConfig({
   modules: ['@wxt-dev/module-vue'],
+  zip: {
+    includeSources: ['**/*', '.nvmrc'],
+    excludeSources: ['store/**'],
+  },
   dev: {
     server: {
       host: '127.0.0.1',
@@ -18,7 +22,10 @@ export default defineConfig({
     host_permissions: [`${process.env.WXT_API_BASE ?? DEFAULT_API_BASE}/*`],
     ...(browser === 'firefox' && {
       browser_specific_settings: {
-        gecko: { id: 'extension@krakenkeys.com' },
+        gecko: {
+          id: 'extension@krakenkeys.com',
+          data_collection_permissions: { required: ['browsingActivity'] },
+        },
       },
     }),
   }),

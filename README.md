@@ -4,6 +4,8 @@ A browser extension that shows you the cheapest place to buy a game while you're
 
 I built [KrakenKeys](https://krakenkeys.com), and found myself often having two tabs open. I thought I might as well create a browser extension to make it even easier to find great Steam deals.
 
+![The KrakenKeys box above the buy button on Valheim's Steam page, showing £16.55 at Gamivo, £6.94 cheaper than Steam](store/screenshots/1-steam-page.jpg)
+
 ## What it does
 
 When you open a game on the Steam store, you'll see a small KrakenKeys box above the buy button:
@@ -18,9 +20,17 @@ When you open a game on the Steam store, you'll see a small KrakenKeys box above
 
 If Steam is already the cheapest, it'll tell you that too.
 
+![The expanded KrakenKeys panel listing nine stores with prices, coupon codes and a 90 day price history chart](store/screenshots/2-compare-stores.jpg)
+
 ## Privacy
 
-The extension only sends the Steam game ID and your chosen currency to KrakenKeys. It doesn't send cookies, it doesn't track what you browse and it doesn't read anything else on the page. Your IP address reaches our server like any web request. We use it to pick your region and to stop the service being abused.
+When you open a game on Steam, the extension sends that game's ID and your chosen currency to KrakenKeys so it can look up prices. It doesn't send cookies, it only runs on Steam game pages and it doesn't read anything on the page apart from the game ID in the address bar.
+
+Like any website, our server sees your IP address and basic browser details. We use your approximate country to show prices for your region, and your IP address to stop the service being abused.
+
+Buy links go through krakenkeys.com first. We log the click, including the game, the store, your IP address and browser details, and record it in PostHog, our analytics tool. It's the same as clicking a store link on the website, and it's how stores know to credit us.
+
+Your settings stay in your browser, and removing the extension deletes them. The full privacy policy is at [krakenkeys.com/browser-extension](https://krakenkeys.com/browser-extension#privacy-policy).
 
 ## Install
 
@@ -45,6 +55,29 @@ Then load it in your browser:
 - **Firefox:** run `pnpm dev:firefox`, go to `about:debugging`, click "This Firefox", then "Load Temporary Add-on" and pick `.output/firefox-mv2-dev/manifest.json`
 
 Changes reload on their own while `pnpm dev` is running.
+
+## Building the release from source
+
+This is how the version on the Chrome Web Store and Firefox Add-ons is built. 
+
+1. Use Node 22 (see `.nvmrc`) and pnpm 9.15.9. Running `corepack enable` sets up the right pnpm version for you.
+2. Install the exact dependency versions from the lockfile:
+
+   ```bash
+   pnpm install --frozen-lockfile
+   ```
+
+3. Build and package it:
+
+   ```bash
+   pnpm zip:firefox
+   ```
+
+   ```bash
+   pnpm zip
+   ```
+
+The Firefox build ends up in `.output/firefox-mv2` and the Chrome build in `.output/chrome-mv3`, alongside the zips that get uploaded to each store.
 
 ## Useful commands
 
